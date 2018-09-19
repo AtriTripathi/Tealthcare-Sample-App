@@ -60,7 +60,7 @@ public class FragmentOne extends Fragment {
                         reminderTime.setText(selectedHour + ":" + selectedMinute);
 
                         mReminderTime.set(mCurrentTime.get(Calendar.YEAR), mCurrentTime.get(Calendar.MONTH),
-                                mCurrentTime.get(Calendar.DATE), selectedHour, selectedMinute, mCurrentTime.get(Calendar.SECOND));
+                                mCurrentTime.get(Calendar.DATE), selectedHour, selectedMinute, 0);
                     }
                 }, hour, minute, true); // For 24 hour time format
                 mTimePicker.setTitle("Select Time");
@@ -71,7 +71,7 @@ public class FragmentOne extends Fragment {
         setReminderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!message.toString().equals("") && !reminderTime.toString().equals("")) {
+                if ((message.getText().toString().trim().equals("") && reminderTime.getText().toString().trim().equals(""))) {
                     Toast.makeText(getContext(),"Message and Time cannot be empty",Toast.LENGTH_SHORT).show();
                 } else {
                     alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
@@ -81,6 +81,8 @@ public class FragmentOne extends Fragment {
                     pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, intent, 0);
 
                     setAlarm(mReminderTime);
+
+                    Toast.makeText(getContext(),"Reminder is set",Toast.LENGTH_SHORT).show();
                 }
             }
         });

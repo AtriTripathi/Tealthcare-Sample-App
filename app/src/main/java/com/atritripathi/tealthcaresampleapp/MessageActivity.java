@@ -31,6 +31,7 @@ public class MessageActivity extends AppCompatActivity {
             dismissButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // Used this to remove all the activities from the backstack, can also use just finish()
                     finishAffinity();
                 }
             });

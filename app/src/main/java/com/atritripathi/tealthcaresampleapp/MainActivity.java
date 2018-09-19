@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_fragment_one:
                 fragment = new FragmentOne();
                 break;
-//            case R.id.nav_menu2:
-//                fragment = new Menu2();
-//                break;
+            case R.id.nav_fragment_two:
+                fragment = new FragmentTwo();
+                break;
 //            case R.id.nav_menu3:
 //                fragment = new Menu3();
 //                break;
