@@ -13,6 +13,8 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //add this line to display menu1 when the activity is loaded
         displaySelectedScreen(R.id.nav_fragment_one);
+
     }
 
     @Override
