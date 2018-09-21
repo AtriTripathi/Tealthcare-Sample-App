@@ -1,6 +1,7 @@
 package com.atritripathi.tealthcaresampleapp;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -11,20 +12,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -32,10 +32,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //add this line to display menu1 when the activity is loaded
+        // To make sure that Fragment One is displayed by default on the app.
         displaySelectedScreen(R.id.nav_fragment_one);
 
     }
+
 
     @Override
     public void onBackPressed() {
@@ -47,12 +48,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void displaySelectedScreen(int itemId) {
 
-        //creating fragment object
+    /**
+     * To display the selected Fragment screen from the sidebar drawer.
+     * @param itemId is used to find out the Fragment selected
+     */
+    private void displaySelectedScreen(int itemId) {
         Fragment fragment = null;
 
-        //initializing the fragment object which is selected
         switch (itemId) {
             case R.id.nav_fragment_one:
                 fragment = new FragmentOne();
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        //replacing the fragment
+        // To replace the Fragment.
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
@@ -76,13 +79,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        //calling the method displayselectedscreen and passing the id of selected menu
+        // To check for the Fragments selected based on the passed item
         displaySelectedScreen(item.getItemId());
-
         return true;
     }
 }

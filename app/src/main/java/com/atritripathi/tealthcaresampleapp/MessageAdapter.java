@@ -14,9 +14,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private final LayoutInflater mInflater;
     private List<Message> mMessages;
 
+
     public MessageAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
     }
+
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         private final TextView messageItemView;
@@ -24,16 +26,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         private MessageViewHolder(final View itemView) {
             super(itemView);
             messageItemView = itemView.findViewById(R.id.tv_message);
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(itemView.getContext(), MantraDetailsActivity.class);
-//                    intent.putExtra("mantra_position", getAdapterPosition() + 1);
-//                    itemView.getContext().startActivity(intent);
-//                }
-//            });
         }
     }
+
 
     @NonNull
     @Override
@@ -55,6 +50,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     /**
      * To assign the mantras to the mantra list
+     *
      * @param messages is the list of mantras
      */
     void setMessages(List<Message> messages) {
@@ -65,6 +61,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     /**
      * To handle the no of views to create on the screen.
+     *
      * @return List size is returned back to the recycler view.
      */
     @Override

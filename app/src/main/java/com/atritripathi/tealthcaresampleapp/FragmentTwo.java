@@ -26,8 +26,6 @@ import java.util.Collections;
 
 public class FragmentTwo extends Fragment {
 
-    private static final String TAG = "FragmentTwo";
-
     private String IMAGE_URL;
     private static ProgressBar circularProgressBar;
     private static ImageView imageView;
@@ -42,6 +40,14 @@ public class FragmentTwo extends Fragment {
         return inflater.inflate(R.layout.fragment_two, container, false);
     }
 
+
+    /**
+     * Came up with a better way to check for internet connection, which is, to directly ping
+     * the Google's servers(whose chances of going down is very less). It is better than using
+     * Network Manager because, although we might be connected to the cell or wifi network but
+     * it is largely possible that there might be no Internet connection.
+     * @return
+     */
     public boolean isConnected() {
         boolean value = false;
         try {
@@ -54,6 +60,8 @@ public class FragmentTwo extends Fragment {
         return value;
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -65,6 +73,9 @@ public class FragmentTwo extends Fragment {
 
         errorMessage.setText("Image Placeholder");
 
+        /**
+         * List of five URL's which all point to HD images to be downloaded.
+         */
         final ArrayList<String> imageUrlList = new ArrayList<>();
         imageUrlList.add("https://wallpapercave.com/wp/6K44j5E.jpg");
         imageUrlList.add("https://wallpaper-house.com/data/out/4/wallpaper2you_35911.jpg");
@@ -78,10 +89,11 @@ public class FragmentTwo extends Fragment {
                 if (isConnected()) {
                     circularProgressBar.setVisibility(View.VISIBLE);
 
-                    // To pick random link
+                    // To shuffle the collection and get a random link
                     Collections.shuffle(imageUrlList);
                     IMAGE_URL = imageUrlList.get(0);
 
+                    // Image downloading and down-scaling will done on a background thread.
                     new DownloadImageTask().execute(IMAGE_URL);
                     Toast.makeText(getContext(),"Downloading New Image", Toast.LENGTH_SHORT).show();
 
@@ -93,8 +105,11 @@ public class FragmentTwo extends Fragment {
     }
 
 
+    /**
+     * This performs the Downloading and the manual Down-Scaling of that image into a lower resolution
+     * Bitmap, on a background thread, i.e AsyncTask
+     */
     private static class DownloadImageTask extends AsyncTask<String, Integer, Bitmap> {
-
         @Override
         protected Bitmap doInBackground(String... Url) {
             Bitmap resizedImage = null;
@@ -105,27 +120,26 @@ public class FragmentTwo extends Fragment {
                 connection.connect();
 
                 InputStream inputStream = new BufferedInputStream(url.openStream(), 8192);
-                Log.d(TAG, "doInBackground: inputStream stream = " + inputStream);
 
+                // This is where magic happens. We can send any value for "Scaling Factor"
+                // and the image will be down-scaled that many times.
                 resizedImage = getResizedImage(inputStream,2);
-                Log.d(TAG, "doInBackground: inputStream here = " + resizedImage);
 
                 inputStream.close();
             } catch (Exception e) {
                 Log.e("Error", e.getMessage());
                 e.printStackTrace();
             } finally {
-                //connection.disconnect();
-                Log.d(TAG, "doInBackground: connection is closed");
+                connection.disconnect();
             }
-            connection.disconnect();
-            Log.d(TAG, "doInBackground: input there = " + resizedImage);
+
             return resizedImage;
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
-            errorMessage.setText("Error Downloading. Try again!");
+            String errorText = "Error Downloading. Try again!";
+            errorMessage.setText(errorText);
             if (result == null) {
                 errorMessage.setVisibility(View.VISIBLE);
             } else {
@@ -138,23 +152,26 @@ public class FragmentTwo extends Fragment {
     }
 
 
+    /**
+     * This is where the magic happens. This method is responsible for creating a down-scaled version
+     * of Bitmap image from the downloading Input Stream, by specifying its Scaling Factor.
+     * @param inputStream is the incoming stream of image data.
+     * @param scalingFactor is the amount of down-scaling to be applied to the image.
+     * @return a Bitmap image with reduced size and very low memory footprint.
+     */
     private static Bitmap getResizedImage(InputStream inputStream, int scalingFactor) {
         final BitmapFactory.Options options = new BitmapFactory.Options();
+
+        // To make sure that bitmap is not loaded to memory immediately.
         options.inJustDecodeBounds = true;
 
+        // To apply the resizing factor to the image stream sample
         options.inSampleSize = scalingFactor;
-        
-        Log.d(TAG, "getResizedImage: inSampleSize = " + options.inSampleSize);
 
+        // Now we can load the bitmap to memory, after applying the scaling factor
         options.inJustDecodeBounds = false;
-        
-        Bitmap bitmap = BitmapFactory.decodeStream(inputStream,null,options);
 
-        Log.d(TAG, "getResizedImage: Initial bitmap size = " + bitmap.getByteCount());
-        Log.d(TAG, "getResizedImage: Options outwidth = " + options.outWidth);
-        Log.d(TAG, "getResizedImage: Options outheight = " + options.outHeight);
-
-        return bitmap;
+        return BitmapFactory.decodeStream(inputStream,null,options);
     }
 
 }

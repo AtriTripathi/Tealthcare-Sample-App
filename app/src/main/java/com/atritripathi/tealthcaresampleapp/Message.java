@@ -3,6 +3,7 @@ package com.atritripathi.tealthcaresampleapp;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.Nullable;
 
 @Entity(tableName = "chat_table")
 public class Message {
@@ -25,8 +26,8 @@ public class Message {
     private boolean isSentMessage;
 
 
-    public Message(int id, String messageText, String time, String status, boolean isSentMessage) {
-        this.id = id;
+    // Constructor
+    public Message(String messageText, String status, @Nullable String time, boolean isSentMessage) {
         this.messageText = messageText;
         this.time = time;
         this.status = status;
@@ -34,6 +35,7 @@ public class Message {
     }
 
 
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -66,11 +68,11 @@ public class Message {
         this.status = status;
     }
 
-    public boolean isSentMessage() {
+    public boolean getIsSentMessage() {
         return isSentMessage;
     }
 
-    public void setSentMessage(boolean sentMessage) {
+    public void setIsSentMessage(boolean sentMessage) {
         isSentMessage = sentMessage;
     }
 }
