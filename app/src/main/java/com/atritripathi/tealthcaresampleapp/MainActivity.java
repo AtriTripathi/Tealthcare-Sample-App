@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_fragment_two:
                 fragment = new FragmentTwo();
                 break;
-//            case R.id.nav_menu3:
-//                fragment = new Menu3();
-//                break;
+            case R.id.nav_fragment_three:
+                fragment = new FragmentThree();
+                break;
         }
 
         //replacing the fragment
